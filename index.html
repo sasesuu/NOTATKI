@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>bubble sort</h1>
+    <div>
+        Name (max 10 characters):
+        <input type="text" id="name" size="20" name="name" /> <br /> Age (from 1 to 100):
+        <input type="text" id="age" size="20" name="age" /> <br /> Mail:
+        <input type="text" id="email" size="20" name="mail" /> <br /><br />
+
+        <button onclick="submitUser()" id="sumbit-user"> submit user</button>
+        <div id="sort-area"></div>
+    </div>
+
+    <script type="text/javascript">
+        function submitUser() {
+            const at = document.getElementById("email").value.indexOf("@")
+                //REGEX: const mail = document.getElementById("email").value
+                ///@/i.test(mail) -> true/false
+            const name = document.getElementById("name").value
+            const age = document.getElementById("age").value
+
+
+            if (name.length < 3 || name.length > 10) {
+                alert("the name may have no more than 10 chars and less than 3 chars")
+                return;
+            }
+
+            if (isNaN(age) || age < 1 || age > 100) {
+                alert("the age must be a number between 1 and 100")
+                return;
+            }
+
+            if (at == -1) {
+                alert("DUDE, not a valid e-mail!")
+                return;
+            }
+
+            const sortArea = document.getElementById("sort-area")
+            const info = document.createElement("p")
+            info.innerHTML = "click this button to sort generate numbers!"
+
+            const button = document.createElement("button")
+            button.innerText = "lets play a game!"
+            button.id = "sort-button"
+            button.onclick = sortNumbers
+
+
+            const resultArea = document.createElement("div")
+            resultArea.id = "results"
+
+            if (!document.getElementById("sort-button")) {
+                sortArea.appendChild(info)
+                sortArea.appendChild(button)
+            }
+
+            sortArea.appendChild(resultArea)
+
+            //powyżej jest zły zwyczaj, ALTERNATYWNA WERSJA można zrobić coś takiego: 
+            // arrayOfElements = [info, button, resultArea]
+
+        }
+        //ALTERNATYWNA WERSJA CD.:
+        // const addElementsToDOM = (arrayOfElements, parentElement) => {
+        // arrayOfElements.map(element => parentElement.appendChild(element))
+        // }
+
+        const createRandomNumbersArray = () => {
+            let numbersArray = []
+            for (let i = 0; i < 10; i++) {
+                numbersArray.push(Math.round(Math.random() * 100))
+            }
+            console.log(numbersArray)
+            return numbersArray;
+        }
+
+        function sortNumbers() {
+            const numbersToSort = createRandomNumbersArray()
+
+            const sortArea = document.getElementById("sort-area");
+            const resultArea = document.getElementById("results");
+
+            const randomNumbers = document.createElement("p");
+            randomNumbers.innerText = `your numbers for today ${numbersToSort}`
+                // '' "" `your numbers for today ${'imie'.toUpperCase()}`
+            resultArea.appendChild(randomNumbers)
+
+            let numbers = numbersToSort
+
+            //pętla zewnętrzna do powtórzenia iteracji wykonanej przez pętlę wewnętrzną:
+            for (let i = 0; i < numbers.length; i++) {
+                //pętla wewnętrzna -> tu odbywa się sortowanie i porównanie elementu z elementem nestępnym
+                for (let j = 1; j < numbers.length; j++) {
+                    if (numbers[j - 1] > numbers[j]) {
+                        let temp = numbers[j] //zmienna tymczasowa robocza
+                        numbers[j] = numbers[j - 1]
+                        numbers[j - 1] = temp
+                    }
+                }
+            }
+            const sortedRandomNumbers = document.createElement("p")
+            sortedRandomNumbers.innerText = "sorted numbers: " + numbers
+            resultArea.appendChild(sortedRandomNumbers)
+
+            const clearButton = document.createElement("button")
+            clearButton.innerText = "one more time?"
+            clearButton.id = "clear-button"
+            clearButton.onclick = clearView
+
+            if (!document.getElementById("clear-button")) {
+                sortArea.appendChild(clearButton)
+            }
+        }
+
+        const clearView = () => {
+            const resultArea = document.getElementById("results")
+            while (resultArea.firstChild) {
+                resultArea.removeChild(resultArea.firstChild)
+            }
+        }
+    </script>
+
+</body>
+
+</html>
